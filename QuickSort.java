@@ -15,31 +15,33 @@ public class QuickSort {
 	public   void sorting(int left,int right ) {
 		//最左邊的index 小於最右邊
 		if(left <right) {
+		 
 		int i=left;
-		int j=right+1;
+		int j=right;
 		
 			while(true) {
 				//游標由左往右找比第一個值小的就進入迴圈
-			while(i+1<num.length &&num[++i]<num[left]) {
-				
+			while( num[i]<num[left]&& i<j) {
+				i++;
 			}
 				//游標由右往左找，如果比第一個值大就進入迴圈
-			while(j-1 >=0 && num[--j]>num[left]) {
-				
+			while( num[j]>num[left] && i<j) {
+				j--;
 			} 
-			        //如果i 大於j表示兩個游標都到中間，需要跳出迴圈
-					if(i>j) 
+			        //游標不相等 就交換
+					if(i !=j) {
+						swap(i,j);
+					}else { 
 						break;
-					//交換
-					swap(i,j);
+					}
+						  
 			
 		}
-			//基準值跟比到最後右邊交換
-			swap(left,j);
+			 
 			//遞迴左半邊
-			sorting(left,j);
+			sorting(left,i-1);
 			//遞迴右半邊
-			sorting(j+1,right);
+			sorting(i+1,right);
 		}
 	}
 
