@@ -41,7 +41,7 @@ public class QuickSort {
 			//遞迴左半邊
 			sorting(left,i-1);
 			//遞迴右半邊
-			sorting(i+1,right);
+			sorting(j+1,right);
 		}
 	}
 
