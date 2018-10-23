@@ -21,11 +21,11 @@ public class QuickSort {
 		
 			while(true) {
 				//游標由左往右找比第一個值小的就進入迴圈
-			while( num[i]<num[left]&& i<j) {
+			while( num[left]>num[i]&& i<j) {
 				i++;
 			}
 				//游標由右往左找，如果比第一個值大就進入迴圈
-			while( num[j]>num[left] && i<j) {
+			while( num[left]<num[j] && i<j) {
 				j--;
 			} 
 			        //游標不相等 就交換
