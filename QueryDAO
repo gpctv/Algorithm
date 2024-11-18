@@ -1,0 +1,60 @@
+package com.stan.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.stan.db.DBConnectionFactory;
+
+public abstract class QueryDAO {
+	private Connection db;
+	public QueryDAO(Connection db) {
+		// TODO Auto-generated constructor stub
+		this.db=db;
+	}
+	
+	public List<Map<String, String>> query(String sqlCmd, List<String> paramList) {
+		Connection conn = this.db;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
+		try {
+			ps = conn.prepareStatement(sqlCmd, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+			int paramCount = 1;
+			for (String param : paramList) {
+				ps.setString(paramCount,param);
+				paramCount++;
+			}
+			
+			rs = ps.executeQuery();
+			rs.last();
+			int lastNum = rs.getRow();
+			resultList = new ArrayList<Map<String, String>>(lastNum);
+			rs.beforeFirst();
+			ResultSetMetaData rsMetaData = rs.getMetaData();
+			while (rs.next()) {
+				Map<String,String> cell=new HashMap<String,String>();
+				for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
+					cell.put(rsMetaData.getColumnName(i), rs.getString(rsMetaData.getColumnName(i)));
+				}	
+				resultList.add(cell);
+			}	
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBConnectionFactory.close(conn, ps, rs);
+		}
+
+		return resultList;
+	}
+
+}
