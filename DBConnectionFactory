@@ -1,0 +1,50 @@
+package com.stan.db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.stan.main.PropertieUnit;
+
+public   class DBConnectionFactory implements IDBConnection{
+	public final static String dbTypeMSSQL="MSSQL";
+	
+	public static void close(Connection conn,PreparedStatement ps,ResultSet rs) {
+		 try {
+			 if(null != conn) {
+				 conn.close();
+			 }
+			 if(null != ps) {
+				 ps.close();
+			 }
+			 if(null != rs) {
+				 rs.close();
+			 }
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
+	}
+
+
+	@Override
+	public Connection connDB(String dbType, PropertieUnit dbInfo) {
+		// TODO Auto-generated method stub
+		Connection conn=null;
+		try {
+			if("MSSQL".equals(dbType)) {
+			  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			  conn = DriverManager.getConnection(dbInfo.getPropertsValue("dbURL"),dbInfo.getPropertsValue("dbAccount"),dbInfo.getPropertsValue("dbPW"));
+			} 
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return conn;
+	}
+}
